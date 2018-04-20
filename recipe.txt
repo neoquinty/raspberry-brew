@@ -1,0 +1,7 @@
+mash_temp:70
+mash_time:60
+boil_temp:99
+boil_time:90
+hop_bitter_time:70
+hop_taste_time:20
+hop_flav_time:05
