@@ -6,7 +6,7 @@ Mashing (and boiling) control for homebrewing using a Raspberry Pi 3 and:
 4) sound warning (via omxplayer)
 
 Current status [April 20, 2018]:
-  - read "recipe.txt" to get mash&boil time and temp, hop time (bitter,taste,flavour)
+  - read "recipe.txt" to get mash&boil time and temp, hop time (bitter,taste,flavour): WORKING
   - temperature control: WORKING
   - resistance control: WORKING
   - sound warning: WORKING by using omxplayer and audio jack
