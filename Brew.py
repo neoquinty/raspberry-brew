@@ -90,11 +90,11 @@ class Brew:
 				self.hop_flav_time=line[-3:-1]
 		
 		self.tottime=int(self.mash_time)+int(self.boil_time)+14+20		##14 valore fisso x portare T a 70 + 14 tempo per portarla a 100
-
+		print "Time: "+str(self.tottime)
 
 	def save(self):
 		now=datetime.datetime.now()
-		filename_prefix="%d-%d-%d_" % (now.year,now.month,now.day)
+		filename_prefix="%d-%d-%d_%d.%d_" % (now.year,now.month,now.day,now.hour,now.minute)
 		temperature_file=filename_prefix+"temperature.pickle"
 		time_file=filename_prefix+"time.pickle"
 		heat_file=filename_prefix+"heat.pickle"

@@ -10,9 +10,9 @@ class Temp:
 	device_file=0
 	start_time=0
 	tot_time=0
-	history_temp=0
-	history_time=0
-	history_heat=0
+	history_temp=[]
+	history_time=[]
+	history_heat=[]
 		
 	def __init__(self):
 		print "Temp  __init__: temp initializing"
@@ -39,9 +39,9 @@ class Temp:
 		return time.time()-self.start_time
 
 	def save(self,heat):
-		history_temp.append(self.get_temp())
-		history_time.append(self.get_current_time())
-		history_heat.append(self.heat.get_status())
+		self.history_temp.append(self.get_temp())
+		self.history_time.append(self.get_current_time())
+		self.history_heat.append(heat.get_status())
 	
 	def get_temp(self):
 		return self.t
@@ -67,7 +67,7 @@ class Temp:
 		self.target=target
 		start_t=self.t
 		elapsed=0.1
-		while math.floor(self.t)<target:
+		while float(self.t)<float(target):
 			## apri resistenza
 			if(heat.get_status()==0):
 				heat.on()
@@ -75,13 +75,14 @@ class Temp:
 			time.sleep(7.5)
 			elapsed+=0.125
 			self.read_temp()
-			print "Temperature"+str(self.t)
+			##print "Temp: "+str(float(self.t))
+			##print "Targ: "+str(float(target))
+			self.tot_time=self.tot_time+0.125
 			self.save(heat)
 		## target reached
 		ramp=(self.t-start_t)/elapsed
 		heat.off()
-		print str(ramp)+" deg per min"
-		self.tot_time=self.tot_time+elapsed
+		##print str(ramp)+" deg per min"
 		return elapsed
 
 	def decrease_to(self,target,heat):
@@ -93,15 +94,15 @@ class Temp:
 			## spegni resistenza
 			if(heat.get_status()==1):
 				heat.off()		
-			print "HEAT OFF"		
+			##print "HEAT OFF"		
 			## cycle every 30sec
 			time.sleep(30)
 			elapsed+=0.5
+			self.tot_time=self.tot_time+0.5
 			self.read_temp()
 			self.save(heat)
-			print "Temperature"+str(self.t)
+			##print "Temperature"+str(self.t)+"/"++str(target)
 		## target reached
-		self.tot_time=self.tot_time+elapsed
 		return elapsed
 
 	
@@ -109,9 +110,9 @@ class Temp:
 		self.read_temp()
 		self.target=target
 		elapsed = 0.1
-		while elapsed<time:
+		while elapsed<fortime:
 			if math.ceil(self.t)<target:
-				e=self.increase_to(target,heat," ")
+				e=self.increase_to(target,heat)
 				elapsed+=e	
 			else:
 				e=self.decrease_to(target,heat)
@@ -130,8 +131,8 @@ class Temp:
 							warning.play("/root/project_brew/audio/hoptaste.wav")
 			time.sleep(15)
 			elapsed+=0.25
+			self.tot_time=self.tot_time+0.25
 		heat.off()
-		self.tot_time=self.tot_time+elapsed
 		return elapsed	
 		
 
