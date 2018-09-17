@@ -2,6 +2,7 @@ import thread
 import Sound
 import time
 import math
+
 class Timer:
 	seconds=0
 	sound_path=""

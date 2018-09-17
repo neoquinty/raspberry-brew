@@ -1,0 +1,17 @@
+##dati di sistema, volume finale e efficienza empirica -da aggiustare-
+system_final_volume:8
+system_efficiency:0.6
+##per i malti metti solo il peso in kg
+malt_dry_extract:0.5
+malt_pale_ale:1
+malt_crystal:0.6
+malt_black:0
+##per il luppolo metti AA:grammi:minuti bollitura:0/1 per pellets/fiori
+hop_bitter:12:10:60:0
+hop_taste:12:10:30:0
+hop_flavour:6:15:5:0
+##empirico->valore attenuazione lievito 0.7-0.8
+yeast_att:0.75
+##dati cotta
+mash:60:70
+boil:90:95

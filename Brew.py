@@ -8,35 +8,18 @@ import Sound
 import pickle
 ##import Display
 
-## schema connessioni
+## connections
 
-## alimentazione 3.3v --> 1 (primo in verticale, colonna sx)
-## ground --> 39 (ultimo in verticale, colonna sx)
+## 3.3v   --> num:  1 (primo in verticale, colonna sx)  --> GPIO??
+## ground --> num: 39 (ultimo in verticale, colonna sx) --> GPIO20
 
-## PIN temperatura --> 7 (quarto in verticale, colonna sx) --> GPIO4
-## PIN relay resis --> 40 (ultimo in verticale, colonna dx) --> GPIO21
+## Temperature probe PIN  --> num  7 (quarto in verticale, colonna sx) --> GPIO04
+## Resistance Relay PIN   --> mun 40 (ultimo in verticale, colonna dx) --> GPIO21
 
 class Brew:
-	end=0
-	tottime=0
-	phase=0
 
-	## devices
-	probe_T=0
-	heat=0
-	warning=0
-	##screen=0
-	
 	## data from recipe
-	filepath=0
-	mash_temp=0
-	mash_time=0
-	boil_temp=0
-	boil_time=0
-	hop_bitter_time=0
-	hop_taste_time=0
-	hop_flav_time=0
-	
+
 	def __init__(self,filepath,t=1,h=1,w=1):
 		self.filepath=filepath
 		## initialize T probe
@@ -57,40 +40,45 @@ class Brew:
 	def show(self):
 		while self.end==0:
 			percentage=int(round(self.probe_T.tot_time*100/self.tottime))
-			line="Heat: "+str(self.heat.get_status())+" Temp: "+str(self.probe_T.get_temp())+"/"+str(self.probe_T.target)+" Progress: %3d [%2d/%2d]" % (percentage,int(round(self.probe_T.tot_time)),int(round(self.tottime)))
+			line="Heat: " +str(self.heat.get_status())+" Temp: "+str(self.probe_T.get_temp())+" / "+str(self.probe_T.target)+" Progress: %3d [%2d/%2d]" % (percentage,int(round(self.probe_T.tot_time)),int(round(self.tottime)))
 			EL = '\x1b[K'  # clear to end of line
 			CR = '\r'  # carriage return
 			sys.stdout.write(line+EL+CR)
 			sys.stdout.flush()
-			##print line+"\r"
-			##self.screen.fill(line_one,line_two,line_three,line_four,line_five)
+			## print line+"\r"
+			## self.screen.fill(line_one,line_two,line_three,line_four,line_five)
 			time.sleep(1)
 
 		print "\n"
-		print " "
+		print "have a nice day\n"
 		##self.screen.clear()
 		##self.screen.fill(" "," ","** END **"," "," ")
 	
 	def read_recipe(self):
-		f=open(self.filepath,'r')
-		for line in f:
-			if   "mash_temp:" in line:
-				self.mash_temp=line[-3:-1]
-			elif "mash_time:" in line:
-				self.mash_time=line[-3:-1]
-			elif "boil_temp:" in line:
-				self.boil_temp=line[-3:-1]
-			elif "boil_time:" in line:
-				self.boil_time=line[-3:-1]
-			elif "hop_bitter_time:" in line:
-				self.hop_bitter_time=line[-3:-1]
-			elif "hop_taste_time:" in line:
-				self.hop_taste_time=line[-3:-1]
-			elif "hop_flav_time:" in line:
-				self.hop_flav_time=line[-3:-1]
+		try:
+			f=open(self.filepath,'r')
+			for line in f:
+				if   "mash_temp:" in line:
+					self.mash_temp=line[-3:-1]
+				elif "mash_time:" in line:
+					self.mash_time=line[-3:-1]
+				elif "boil_temp:" in line:
+					self.boil_temp=line[-3:-1]
+				elif "boil_time:" in line:
+					self.boil_time=line[-3:-1]
+				elif "hop_bitter_time:" in line:
+					self.hop_bitter_time=line[-3:-1]
+				elif "hop_taste_time:" in line:
+					self.hop_taste_time=line[-3:-1]
+				elif "hop_flav_time:" in line:
+					self.hop_flav_time=line[-3:-1]
 		
-		self.tottime=int(self.mash_time)+int(self.boil_time)+14+20		##14 valore fisso x portare T a 70 + 14 tempo per portarla a 100
-		print "Time: "+str(self.tottime)
+			self.tottime=int(self.mash_time)+int(self.boil_time)+14+30		##14 valore fisso x portare T a 70 + 30 tempo per portarla a 100
+		except (FileNotFoundError, IOError): 
+			print "File '%s' not found!!" % (self.filepath)			
+			print "Exiting.."
+			print "\n"
+			exit()
 
 	def save(self):
 		now=datetime.datetime.now()
